@@ -1,13 +1,14 @@
 import { useEffect, useState } from "react";
-import { getPhotos, getPhoto } from "./api/google";
-import { Grid, ActionPanel, Action, Detail, Icon } from "@raycast/api";
+import { getPhoto } from "./api/google";
+import { Grid, ActionPanel, Action, Detail } from "@raycast/api";
 import { withGoogleAuth } from "./components/withGoogleAuth";
-import { ListResponse, MediaItem, MediaMetadata } from "./types/google";
+import { MediaItem } from "./types/google";
+import { usePhotos } from "./hooks/usePhotos";
 
 const sorts = [
   { id: "all", name: "All", value: "ALL_MEDIA" },
-  { id: "photos", name: "Photos", value: "PHOTOS" },
-  { id: "videos", name: "Videos", value: "VIDEOS" },
+  { id: "photos", name: "Photos", value: "PHOTO" },
+  { id: "videos", name: "Videos", value: "VIDEO" },
 ];
 
 const categories = [
@@ -16,27 +17,17 @@ const categories = [
 ];
 
 const GooglePhotos: React.FunctionComponent = () => {
-  const [photos, setPhotos] = useState<MediaItem[]>([]);
   const [type, setType] = useState<string>("ALL_MEDIA");
-
-  useEffect(() => {
-    async function fetchPhotos() {
-      const response: ListResponse = await getPhotos();
-      const mediaItems: MediaItem[] = response.mediaItems;
-      setPhotos(mediaItems);
-    }
-
-    fetchPhotos();
-  }, []);
+  const { photos, loading, error } = usePhotos(type);
 
   return (
     <Grid
-      columns={6}
+      columns={4}
       inset={Grid.Inset.Zero}
       filtering={false}
-      isLoading={photos.length === 0}
+      isLoading={loading}
       searchBarAccessory={
-        <Grid.Dropdown tooltip="Sort By" storeValue={true} onChange={(newValue) => setType(newValue)}>
+        <Grid.Dropdown tooltip="Sort By" storeValue={false} onChange={setType}>
           <Grid.Dropdown.Section title="Sort By">
             {sorts.map((type) => (
               <Grid.Dropdown.Item key={type.id} title={type.name} value={type.value} />
@@ -56,7 +47,7 @@ const GooglePhotos: React.FunctionComponent = () => {
           content={photo.baseUrl}
           actions={
             <ActionPanel>
-              <Action.Push title="View Photo" target={<Photo photo={photo.id} />} />
+              <Action.Push title="View" target={<Photo photo={photo.id} />} />
               <Action.OpenInBrowser url={photo.productUrl} />
             </ActionPanel>
           }
