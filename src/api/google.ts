@@ -4,8 +4,8 @@ import { ListResponse } from "../types/google";
 
 const BASE_URL = "https://photoslibrary.googleapis.com/v1";
 
-export async function getPhotos() {
-  const token = await getOAuthToken();
+export async function getPhotos(): Promise<ListResponse> {
+  const token = getOAuthToken();
   const response = await fetch(`${BASE_URL}/mediaItems`, {
     headers: {
       Authorization: `Bearer ${token}`,
@@ -13,6 +13,9 @@ export async function getPhotos() {
     },
   });
 
-  const data = await response.json();
-  return data as ListResponse;
+  if (response.status !== 200) {
+    throw new Error("Cannot fetch photos");
+  }
+
+  return response.json() as Promise<ListResponse>;
 }
