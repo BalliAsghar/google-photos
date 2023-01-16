@@ -2,7 +2,7 @@ import { OAuth } from "@raycast/api";
 import { URLSearchParams } from "url";
 import fetch from "node-fetch";
 
-const CLIENT_ID: string = "1093421490337-qe35gpu2sltk6rg7c2jjhrr1nn9tc4ip.apps.googleusercontent.com";
+const CLIENT_ID = "1093421490337-qe35gpu2sltk6rg7c2jjhrr1nn9tc4ip.apps.googleusercontent.com";
 
 export const client = new OAuth.PKCEClient({
   redirectMethod: OAuth.RedirectMethod.AppURI,

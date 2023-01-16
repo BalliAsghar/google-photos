@@ -1,8 +1,9 @@
 import { useState } from "react";
-import { Grid, ActionPanel, Action, Detail, Toast, showToast } from "@raycast/api";
+import { Grid, ActionPanel, Action, Detail, Toast, showToast, Icon } from "@raycast/api";
 import { withGoogleAuth } from "./components/withGoogleAuth";
 import { usePhotos } from "./hooks/usePhotos";
 import { usePhoto } from "./hooks/usePhoto";
+import { downloadMedia } from "./utils";
 
 const sorts = [
   { id: "all", name: "All", value: "ALL_MEDIA" },
@@ -41,6 +42,11 @@ const GooglePhotos: React.FunctionComponent = () => {
           actions={
             <ActionPanel>
               <Action.Push title="View" target={<Photo id={photo.id} />} />
+              <Action
+                title="Download"
+                icon={{ source: Icon.Download }}
+                onAction={() => downloadMedia(photo.baseUrl, photo.filename, photo.mimeType)}
+              />
               <Action.OpenInBrowser url={photo.productUrl} />
             </ActionPanel>
           }
@@ -68,6 +74,11 @@ const Photo = ({ id }: { id: string }) => {
       navigationTitle={photo?.filename}
       actions={
         <ActionPanel>
+          <Action
+            title="Download"
+            icon={{ source: Icon.Download }}
+            onAction={() => downloadMedia(photo?.baseUrl ?? "", photo?.filename ?? "", photo?.mimeType ?? "")}
+          />
           <Action.OpenInBrowser url={photo?.productUrl ?? ""} />
         </ActionPanel>
       }
