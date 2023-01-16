@@ -14,6 +14,10 @@ const GooglePhotos: React.FunctionComponent = () => {
   const [type, setType] = useState<string>("ALL_MEDIA");
   const { photos, loading, error } = usePhotos(type);
 
+  if (error) {
+    showToast(Toast.Style.Failure, "Error", error);
+  }
+
   return (
     <Grid
       columns={4}
