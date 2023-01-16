@@ -20,9 +20,9 @@
   ],
   "preferences": [
     {
-      "name": "photo-Count",
+      "name": "pageSize",
       "title": "Number of photos to fetch",
-      "required": false,
+      "required": true,
       "type": "dropdown",
       "default": "50",
       "description": "Number of photos to fetch",
