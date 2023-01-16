@@ -1,9 +1,8 @@
-import { useEffect, useState } from "react";
-import { getPhoto } from "./api/google";
-import { Grid, ActionPanel, Action, Detail } from "@raycast/api";
+import { useState } from "react";
+import { Grid, ActionPanel, Action, Detail, Toast, showToast } from "@raycast/api";
 import { withGoogleAuth } from "./components/withGoogleAuth";
-import { MediaItem } from "./types/google";
 import { usePhotos } from "./hooks/usePhotos";
+import { usePhoto } from "./hooks/usePhoto";
 
 const sorts = [
   { id: "all", name: "All", value: "ALL_MEDIA" },
@@ -47,7 +46,7 @@ const GooglePhotos: React.FunctionComponent = () => {
           content={photo.baseUrl}
           actions={
             <ActionPanel>
-              <Action.Push title="View" target={<Photo photo={photo.id} />} />
+              <Action.Push title="View" target={<Photo id={photo.id} />} />
               <Action.OpenInBrowser url={photo.productUrl} />
             </ActionPanel>
           }
@@ -61,40 +60,32 @@ export default function Command() {
   return withGoogleAuth(<GooglePhotos />);
 }
 
-const Photo = ({ photo }: { photo: string }) => {
-  const [mediaItem, setMediaItem] = useState<MediaItem>();
+const Photo = ({ id }: { id: string }) => {
+  const { photo, loading, error } = usePhoto(id);
 
-  useEffect(() => {
-    async function fetchPhoto() {
-      const response: MediaItem = await getPhoto(photo);
-      setMediaItem(response);
-    }
-
-    fetchPhoto();
-  }, []);
+  if (error) {
+    showToast(Toast.Style.Failure, "Error", error);
+  }
 
   return (
     <Detail
-      markdown={`![${mediaItem?.filename}](${mediaItem?.baseUrl})`}
-      navigationTitle={mediaItem?.filename}
+      isLoading={loading}
+      markdown={`![${photo?.filename}](${photo?.baseUrl})`}
+      navigationTitle={photo?.filename}
       actions={
         <ActionPanel>
-          <Action.OpenInBrowser url={mediaItem?.productUrl ?? ""} />
+          <Action.OpenInBrowser url={photo?.productUrl ?? ""} />
         </ActionPanel>
       }
       metadata={
         <Detail.Metadata>
-          <Detail.Metadata.Label title="Filename" text={mediaItem?.filename} />
-          <Detail.Metadata.Label title="MIME Type" text={mediaItem?.mimeType} />
-          <Detail.Metadata.Label title="Created" text={mediaItem?.mediaMetadata?.creationTime} />
-          <Detail.Metadata.Label title="Width" text={mediaItem?.mediaMetadata?.width.toString() + "px"} />
-          <Detail.Metadata.Label title="Width" text={mediaItem?.mediaMetadata?.height.toString() + "px"} />
+          <Detail.Metadata.Label title="Filename" text={photo?.filename} />
+          <Detail.Metadata.Label title="MIME Type" text={photo?.mimeType} />
+          <Detail.Metadata.Label title="Created" text={photo?.mediaMetadata?.creationTime} />
+          <Detail.Metadata.Label title="Width" text={photo?.mediaMetadata?.width.toString() + "px"} />
+          <Detail.Metadata.Label title="Width" text={photo?.mediaMetadata?.height.toString() + "px"} />
           <Detail.Metadata.Separator />
-          <Detail.Metadata.Link
-            title="View in Google Photos"
-            target={mediaItem?.productUrl ?? ""}
-            text="Open in Browser"
-          />
+          <Detail.Metadata.Link title="View in Google Photos" target={photo?.productUrl ?? ""} text="Open in Browser" />
         </Detail.Metadata>
       }
     />
