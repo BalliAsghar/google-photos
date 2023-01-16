@@ -3,7 +3,7 @@
   "name": "google-photos",
   "title": "Google Photos",
   "description": "View Google Photos",
-  "icon": "command-icon.png",
+  "icon": "google-photos.png",
   "author": "BalliAsghar",
   "categories": [
     "Media"
