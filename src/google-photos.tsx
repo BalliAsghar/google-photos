@@ -10,11 +10,6 @@ const sorts = [
   { id: "videos", name: "Videos", value: "VIDEO" },
 ];
 
-const categories = [
-  { id: "albums", name: "Albums", value: "ALBUMS" },
-  { id: "sharedAlbums", name: "Shared Albums", value: "SHARED_ALBUMS" },
-];
-
 const GooglePhotos: React.FunctionComponent = () => {
   const [type, setType] = useState<string>("ALL_MEDIA");
   const { photos, loading, error } = usePhotos(type);
@@ -29,11 +24,6 @@ const GooglePhotos: React.FunctionComponent = () => {
         <Grid.Dropdown tooltip="Sort By" storeValue={false} onChange={setType}>
           <Grid.Dropdown.Section title="Sort By">
             {sorts.map((type) => (
-              <Grid.Dropdown.Item key={type.id} title={type.name} value={type.value} />
-            ))}
-          </Grid.Dropdown.Section>
-          <Grid.Dropdown.Section title="Categories">
-            {categories.map((type) => (
               <Grid.Dropdown.Item key={type.id} title={type.name} value={type.value} />
             ))}
           </Grid.Dropdown.Section>
@@ -81,7 +71,10 @@ const Photo = ({ id }: { id: string }) => {
         <Detail.Metadata>
           <Detail.Metadata.Label title="Filename" text={photo?.filename} />
           <Detail.Metadata.Label title="MIME Type" text={photo?.mimeType} />
-          <Detail.Metadata.Label title="Created" text={photo?.mediaMetadata?.creationTime} />
+          <Detail.Metadata.Label
+            title="Created"
+            text={photo?.mediaMetadata?.creationTime && new Date(photo?.mediaMetadata?.creationTime).toLocaleString()}
+          />
           <Detail.Metadata.Label title="Width" text={photo?.mediaMetadata?.width.toString() + "px"} />
           <Detail.Metadata.Label title="Width" text={photo?.mediaMetadata?.height.toString() + "px"} />
           <Detail.Metadata.Separator />
