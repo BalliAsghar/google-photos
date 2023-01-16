@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { getPhotos } from "./api/google";
-import { Grid } from "@raycast/api";
+import { Grid, ActionPanel, Action } from "@raycast/api";
 import { withGoogleAuth } from "./components/withGoogleAuth";
 import { ListResponse, MediaItem } from "./types/google";
 
@@ -20,7 +20,15 @@ const GooglePhotos: React.FunctionComponent = () => {
   return (
     <Grid columns={3} inset={Grid.Inset.Zero} filtering={false}>
       {photos.map((photo) => (
-        <Grid.Item key={photo.id} content={photo.baseUrl} />
+        <Grid.Item
+          key={photo.id}
+          content={photo.baseUrl}
+          actions={
+            <ActionPanel>
+              <Action.OpenInBrowser url={photo.productUrl} />
+            </ActionPanel>
+          }
+        />
       ))}
     </Grid>
   );
