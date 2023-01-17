@@ -24,7 +24,7 @@
       "title": "Number of photos to fetch",
       "required": true,
       "type": "dropdown",
-      "default": "50",
+      "default": "30",
       "description": "Number of photos to fetch",
       "data": [
         {
