@@ -3,23 +3,26 @@ import fetch from "node-fetch";
 import { ListResponse, MediaItem } from "../types/google";
 import { useEffect, useState } from "react";
 import { getPreferenceValues } from "@raycast/api";
-
+import { URLSearchParams } from "url";
 const BASE_URL = "https://photoslibrary.googleapis.com/v1";
 
 const { pageSize } = getPreferenceValues();
 
-export const usePhotos = (type: string) => {
+export const usePhotos = (type: string, nextpageToken: string) => {
+  console.log(`Called on Date: ${new Date().toTimeString()}`);
   const [photos, setPhotos] = useState<MediaItem[]>([]);
-  const [loading, setLoading] = useState<boolean>(false);
+  const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
+  const [nextPageToken, setNextPageToken] = useState<string | null>(null);
 
   useEffect(() => {
-    const fetchPhotos = async () => {
-      setLoading(true);
+    async function fetchPhotos() {
+      const params = new URLSearchParams();
+      params.append("pageToken", nextpageToken);
       setPhotos([]);
       try {
         const token = getOAuthToken();
-        const res = await fetch(`${BASE_URL}/mediaItems:search`, {
+        const response = await fetch(`${BASE_URL}/mediaItems:search?${params}`, {
           method: "POST",
           headers: {
             Authorization: `Bearer ${token}`,
@@ -36,16 +39,17 @@ export const usePhotos = (type: string) => {
           }),
         });
 
-        const data = (await res.json()) as ListResponse;
+        const data = (await response.json()) as ListResponse;
         setPhotos(data.mediaItems);
+        setNextPageToken(data.nextPageToken);
         setLoading(false);
       } catch (error: any) {
         setError(error.message);
         setLoading(false);
       }
-    };
+    }
     fetchPhotos();
-  }, [type]);
+  }, [type, nextpageToken]);
 
-  return { photos, loading, error };
+  return { photos, loading, error, nextPageToken };
 };

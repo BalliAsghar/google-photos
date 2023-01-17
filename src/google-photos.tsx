@@ -13,11 +13,18 @@ const sorts = [
 
 const GooglePhotos: React.FunctionComponent = () => {
   const [type, setType] = useState<string>("ALL_MEDIA");
-  const { photos, loading, error } = usePhotos(type);
+  const [nextPage, setNextPage] = useState<string>("");
+
+  const { photos, loading, error, nextPageToken } = usePhotos(type, nextPage);
 
   if (error) {
     showToast(Toast.Style.Failure, "Error", error);
   }
+
+  const setTypeAndClearPageToken = (value: string) => {
+    setType(value);
+    setNextPage("");
+  };
 
   return (
     <Grid
@@ -26,7 +33,7 @@ const GooglePhotos: React.FunctionComponent = () => {
       filtering={false}
       isLoading={loading}
       searchBarAccessory={
-        <Grid.Dropdown tooltip="Sort By" storeValue={false} onChange={setType}>
+        <Grid.Dropdown tooltip="Sort By" storeValue={false} onChange={(value) => setTypeAndClearPageToken(value)}>
           <Grid.Dropdown.Section title="Sort By">
             {sorts.map((type) => (
               <Grid.Dropdown.Item key={type.id} title={type.name} value={type.value} />
@@ -46,6 +53,11 @@ const GooglePhotos: React.FunctionComponent = () => {
                 title="Download"
                 icon={{ source: Icon.Download }}
                 onAction={() => downloadMedia(photo.baseUrl, photo.filename, photo.mimeType)}
+              />
+              <Action
+                title="Next Page"
+                icon={{ source: Icon.ArrowRight }}
+                onAction={() => setNextPage(nextPageToken ?? "")}
               />
               <Action.OpenInBrowser url={photo.productUrl} />
             </ActionPanel>
