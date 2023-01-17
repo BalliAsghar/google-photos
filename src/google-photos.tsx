@@ -6,9 +6,9 @@ import { usePhoto } from "./hooks/usePhoto";
 import { downloadMedia } from "./utils";
 
 const sorts = [
-  { id: "all", name: "All", value: "ALL_MEDIA" },
-  { id: "photos", name: "Photos", value: "PHOTO" },
-  { id: "videos", name: "Videos", value: "VIDEO" },
+  { id: "all", name: "All", value: "ALL_MEDIA", icon: Icon.House },
+  { id: "photos", name: "Photos", value: "PHOTO", icon: Icon.Image },
+  { id: "videos", name: "Videos", value: "VIDEO", icon: Icon.Video },
 ];
 
 const GooglePhotos: React.FunctionComponent = () => {
@@ -36,7 +36,7 @@ const GooglePhotos: React.FunctionComponent = () => {
         <Grid.Dropdown tooltip="Sort By" storeValue={false} onChange={(value) => setTypeAndClearPageToken(value)}>
           <Grid.Dropdown.Section title="Sort By">
             {sorts.map((type) => (
-              <Grid.Dropdown.Item key={type.id} title={type.name} value={type.value} />
+              <Grid.Dropdown.Item key={type.id} title={type.name} value={type.value} icon={{ source: type.icon }} />
             ))}
           </Grid.Dropdown.Section>
         </Grid.Dropdown>

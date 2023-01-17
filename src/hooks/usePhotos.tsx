@@ -9,7 +9,6 @@ const BASE_URL = "https://photoslibrary.googleapis.com/v1";
 const { pageSize } = getPreferenceValues();
 
 export const usePhotos = (type: string, nextpageToken: string) => {
-  console.log(`Called on Date: ${new Date().toTimeString()}`);
   const [photos, setPhotos] = useState<MediaItem[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
