@@ -55,6 +55,11 @@ const GooglePhotos: React.FunctionComponent = () => {
                 onAction={() => setNextPage(nextPageToken ?? "")}
                 shortcut={{ modifiers: ["cmd"], key: "n" }}
               />
+              <Action.CopyToClipboard
+                title="Copy Link"
+                content={photo.productUrl}
+                shortcut={{ modifiers: ["cmd"], key: "c" }}
+              />
               <Action
                 title="Download"
                 icon={{ source: Icon.Download }}

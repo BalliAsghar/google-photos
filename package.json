@@ -2,7 +2,7 @@
   "$schema": "https://www.raycast.com/schemas/extension.json",
   "name": "google-photos",
   "title": "Google Photos",
-  "description": "View Google Photos",
+  "description": "Access, view and Download your Google Photos",
   "icon": "google-photos.png",
   "author": "BalliAsghar",
   "categories": [
