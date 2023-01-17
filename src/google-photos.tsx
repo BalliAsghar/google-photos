@@ -53,13 +53,15 @@ const GooglePhotos: React.FunctionComponent = () => {
                 title="Download"
                 icon={{ source: Icon.Download }}
                 onAction={() => downloadMedia(photo.baseUrl, photo.filename, photo.mimeType)}
+                shortcut={{ modifiers: ["cmd"], key: "d" }}
               />
               <Action
                 title="Next Page"
                 icon={{ source: Icon.ArrowRight }}
                 onAction={() => setNextPage(nextPageToken ?? "")}
+                shortcut={{ modifiers: ["cmd"], key: "n" }}
               />
-              <Action.OpenInBrowser url={photo.productUrl} />
+              <Action.OpenInBrowser url={photo.productUrl} shortcut={{ modifiers: ["cmd"], key: "o" }} />
             </ActionPanel>
           }
         />
