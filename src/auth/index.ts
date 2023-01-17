@@ -26,8 +26,7 @@ export async function authorize(): Promise<string> {
   const authRequest = await client.authorizationRequest({
     endpoint: "https://accounts.google.com/o/oauth2/v2/auth",
     clientId: CLIENT_ID,
-    scope:
-      "https://www.googleapis.com/auth/photoslibrary https://www.googleapis.com/auth/photoslibrary.readonly https://www.googleapis.com/auth/photoslibrary.readonly.appcreateddata",
+    scope: "https://www.googleapis.com/auth/photoslibrary.readonly",
   });
   const { authorizationCode } = await client.authorize(authRequest);
 
