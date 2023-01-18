@@ -42,6 +42,7 @@ const GooglePhotos: React.FunctionComponent = () => {
         </Grid.Dropdown>
       }
     >
+      {photos.length < 1 && <Grid.EmptyView title={"You don't have any photos in your library."} />}
       {photos.map((photo) => (
         <Grid.Item
           key={photo.id}
