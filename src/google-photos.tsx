@@ -42,37 +42,37 @@ const GooglePhotos: React.FunctionComponent = () => {
         </Grid.Dropdown>
       }
     >
-      {photos.length < 1 && <Grid.EmptyView title={"You don't have any photos in your library."} />}
-      {photos.map((photo) => (
-        <Grid.Item
-          key={photo.id}
-          content={photo.baseUrl}
-          actions={
-            <ActionPanel>
-              <Action.Push title="View" target={<Photo id={photo.id} />} icon={{ source: Icon.BlankDocument }} />
-              <Action
-                title="Next Page"
-                icon={{ source: Icon.ArrowRight }}
-                onAction={() => setNextPage(nextPageToken ?? "")}
-                shortcut={{ modifiers: ["cmd"], key: "n" }}
-              />
-              <Action.CopyToClipboard
-                title="Copy Link"
-                content={photo.productUrl}
-                shortcut={{ modifiers: ["cmd"], key: "c" }}
-              />
-              <Action
-                title="Download"
-                icon={{ source: Icon.Download }}
-                onAction={() => downloadMedia(photo.baseUrl, photo.filename, photo.mimeType)}
-                shortcut={{ modifiers: ["cmd"], key: "d" }}
-              />
+      {photos.length > 0 &&
+        photos.map((photo) => (
+          <Grid.Item
+            key={photo.id}
+            content={photo.baseUrl}
+            actions={
+              <ActionPanel>
+                <Action.Push title="View" target={<Photo id={photo.id} />} icon={{ source: Icon.BlankDocument }} />
+                <Action
+                  title="Next Page"
+                  icon={{ source: Icon.ArrowRight }}
+                  onAction={() => setNextPage(nextPageToken ?? "")}
+                  shortcut={{ modifiers: ["cmd"], key: "n" }}
+                />
+                <Action.CopyToClipboard
+                  title="Copy Link"
+                  content={photo.productUrl}
+                  shortcut={{ modifiers: ["cmd"], key: "c" }}
+                />
+                <Action
+                  title="Download"
+                  icon={{ source: Icon.Download }}
+                  onAction={() => downloadMedia(photo.baseUrl, photo.filename, photo.mimeType)}
+                  shortcut={{ modifiers: ["cmd"], key: "d" }}
+                />
 
-              <Action.OpenInBrowser url={photo.productUrl} shortcut={{ modifiers: ["cmd"], key: "o" }} />
-            </ActionPanel>
-          }
-        />
-      ))}
+                <Action.OpenInBrowser url={photo.productUrl} shortcut={{ modifiers: ["cmd"], key: "o" }} />
+              </ActionPanel>
+            }
+          />
+        ))}
     </Grid>
   );
 };
