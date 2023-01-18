@@ -3,18 +3,11 @@ import { Grid, ActionPanel, Action, Detail, Toast, showToast, Icon, List } from 
 import { withGoogleAuth } from "./components/withGoogleAuth";
 import { usePhotos } from "./hooks/usePhotos";
 import { usePhoto } from "./hooks/usePhoto";
-import { downloadMedia } from "./utils";
-
-const sorts = [
-  { id: "all", name: "All", value: "ALL_MEDIA", icon: Icon.House },
-  { id: "photos", name: "Photos", value: "PHOTO", icon: Icon.Image },
-  { id: "videos", name: "Videos", value: "VIDEO", icon: Icon.Video },
-];
+import { categories, downloadMedia, sorts } from "./utils";
 
 const GooglePhotos: React.FunctionComponent = () => {
   const [type, setType] = useState<string>("ALL_MEDIA");
   const [nextPage, setNextPage] = useState<string>("");
-
   const { photos, loading, error, nextPageToken } = usePhotos(type, nextPage);
 
   if (error) {
@@ -43,40 +36,44 @@ const GooglePhotos: React.FunctionComponent = () => {
               <Grid.Dropdown.Item key={type.id} title={type.name} value={type.value} icon={{ source: type.icon }} />
             ))}
           </Grid.Dropdown.Section>
+          <Grid.Dropdown.Section title="Categories">
+            {categories.map((type) => (
+              <Grid.Dropdown.Item key={type.id} title={type.name} value={type.value} />
+            ))}
+          </Grid.Dropdown.Section>
         </Grid.Dropdown>
       }
     >
-      {photos.length > 0 &&
-        photos.map((photo) => (
-          <Grid.Item
-            key={photo.id}
-            content={photo.baseUrl}
-            actions={
-              <ActionPanel>
-                <Action.Push title="View" target={<Photo id={photo.id} />} icon={{ source: Icon.BlankDocument }} />
-                <Action
-                  title="Next Page"
-                  icon={{ source: Icon.ArrowRight }}
-                  onAction={() => setNextPage(nextPageToken ?? "")}
-                  shortcut={{ modifiers: ["cmd"], key: "n" }}
-                />
-                <Action.CopyToClipboard
-                  title="Copy Link"
-                  content={photo.productUrl}
-                  shortcut={{ modifiers: ["cmd"], key: "c" }}
-                />
-                <Action
-                  title="Download"
-                  icon={{ source: Icon.Download }}
-                  onAction={() => downloadMedia(photo.baseUrl, photo.filename, photo.mimeType)}
-                  shortcut={{ modifiers: ["cmd"], key: "d" }}
-                />
+      {photos.map((photo) => (
+        <Grid.Item
+          key={photo.id}
+          content={photo.baseUrl}
+          actions={
+            <ActionPanel>
+              <Action.Push title="View" target={<Photo id={photo.id} />} icon={{ source: Icon.BlankDocument }} />
+              <Action
+                title="Next Page"
+                icon={{ source: Icon.ArrowRight }}
+                onAction={() => setNextPage(nextPageToken ?? "")}
+                shortcut={{ modifiers: ["cmd"], key: "n" }}
+              />
+              <Action.CopyToClipboard
+                title="Copy Link"
+                content={photo.productUrl}
+                shortcut={{ modifiers: ["cmd"], key: "c" }}
+              />
+              <Action
+                title="Download"
+                icon={{ source: Icon.Download }}
+                onAction={() => downloadMedia(photo.baseUrl, photo.filename, photo.mimeType)}
+                shortcut={{ modifiers: ["cmd"], key: "d" }}
+              />
 
-                <Action.OpenInBrowser url={photo.productUrl} shortcut={{ modifiers: ["cmd"], key: "o" }} />
-              </ActionPanel>
-            }
-          />
-        ))}
+              <Action.OpenInBrowser url={photo.productUrl} shortcut={{ modifiers: ["cmd"], key: "o" }} />
+            </ActionPanel>
+          }
+        />
+      ))}
     </Grid>
   );
 };
