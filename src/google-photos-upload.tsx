@@ -19,8 +19,7 @@ const GoogleUpload: React.FunctionComponent = () => {
       setError("No valid files selected");
       return;
     }
-
-    const toast = await showToast(Toast.Style.Animated, "Getting token...");
+    const toast = await showToast(Toast.Style.Animated, "");
 
     await Promise.all(
       validFiles.map(async (file) => {
@@ -35,6 +34,8 @@ const GoogleUpload: React.FunctionComponent = () => {
     toast.style = Toast.Style.Success;
     toast.message = "Upload complete";
     toast.title = "Success";
+
+    setFiles([]);
   };
 
   return (
