@@ -13,6 +13,11 @@ const GoogleUpload: React.FunctionComponent = () => {
       return;
     }
 
+    if (files.length > 50) {
+      setError("Max 50 files");
+      return;
+    }
+
     const validFiles = files.filter((file) => validMediaTypes.includes(file.split(".").pop()!));
 
     if (!validFiles.length) {
@@ -42,7 +47,7 @@ const GoogleUpload: React.FunctionComponent = () => {
         </ActionPanel>
       }
     >
-      <Form.FilePicker id="files" value={files} onChange={setFiles} error={error} autoFocus />
+      <Form.FilePicker id="files" value={files} onChange={setFiles} error={error} autoFocus info="Max 50 files" />
       <Form.Separator />
     </Form>
   );
