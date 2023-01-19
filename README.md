@@ -5,7 +5,7 @@
 - View your Google Photos media
 - Search by category
 - download media
-- Upload media (image/png only)
+- Upload media
 
 ## Setup
 
