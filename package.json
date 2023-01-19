@@ -16,6 +16,13 @@
       "subtitle": "Google Photos",
       "description": "View Google Photos",
       "mode": "view"
+    },
+    {
+      "name": "google-photos-upload",
+      "title": "Upload",
+      "subtitle": "Google Photos",
+      "description": "Upload a photo to Google Photos",
+      "mode": "view"
     }
   ],
   "preferences": [
