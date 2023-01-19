@@ -24,3 +24,4 @@ npm run build
 
 ![screenshot](./metadata/google-photos-1.png)
 ![screenshot](./metadata/google-photos-2.png)
+![screenshot](./metadata/google-photos-3.png)
