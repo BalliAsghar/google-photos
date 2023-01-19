@@ -19,21 +19,17 @@ const GoogleUpload: React.FunctionComponent = () => {
       setError("No valid files selected");
       return;
     }
-    const toast = await showToast(Toast.Style.Animated, "");
+    await showToast(Toast.Style.Animated, "Uploading files...");
+    const tokens = await Promise.all(validFiles.map(async (file) => await GetToken(file)));
 
-    await Promise.all(
-      validFiles.map(async (file) => {
-        const token = await GetToken(file);
-        if (!token) return;
-        toast.title = "Uploading";
-        toast.message = `${file.split("/").pop()}`;
-        await createMediaItem(token);
-      })
-    );
+    if (!tokens) {
+      setError("No valid files selected");
+      showToast(Toast.Style.Failure, "No valid files selected");
+      return;
+    }
 
-    toast.style = Toast.Style.Success;
-    toast.message = "Upload complete";
-    toast.title = "Success";
+    await createMediaItem(tokens as any);
+    await showToast(Toast.Style.Success, "Files uploaded successfully");
 
     setFiles([]);
   };
@@ -46,7 +42,7 @@ const GoogleUpload: React.FunctionComponent = () => {
         </ActionPanel>
       }
     >
-      <Form.FilePicker id="files" value={files} onChange={setFiles} error={error} />
+      <Form.FilePicker id="files" value={files} onChange={setFiles} error={error} autoFocus />
       <Form.Separator />
     </Form>
   );

@@ -117,7 +117,7 @@ export const GetToken = async (path: string) => {
   }
 };
 
-export const createMediaItem = async (token: string) => {
+export const createMediaItem = async (tokens: string[]) => {
   try {
     const response = await fetch("https://photoslibrary.googleapis.com/v1/mediaItems:batchCreate", {
       method: "POST",
@@ -126,14 +126,12 @@ export const createMediaItem = async (token: string) => {
         "Content-type": "application/json",
       },
       body: JSON.stringify({
-        newMediaItems: [
-          {
-            description: "Uploaded from Raycast",
-            simpleMediaItem: {
-              uploadToken: token,
-            },
+        newMediaItems: tokens.map((token) => ({
+          description: "Uploaded from Photos",
+          simpleMediaItem: {
+            uploadToken: token,
           },
-        ],
+        })),
       }),
     });
 
