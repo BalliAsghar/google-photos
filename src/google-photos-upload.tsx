@@ -1,11 +1,11 @@
-import { ActionPanel, Form, Action, Toast, showToast } from "@raycast/api";
+import { ActionPanel, Form, Action, Toast, showToast, Icon } from "@raycast/api";
 import { useState } from "react";
-import { validMediaTypes } from "./utils";
+import { validMediaTypes, GetToken, createMediaItem } from "./utils";
+import { withGoogleAuth } from "./components/withGoogleAuth";
 
-export default function Command() {
+const GoogleUpload: React.FunctionComponent = () => {
   const [files, setFiles] = useState<string[]>([]);
   const [error, setError] = useState<string | undefined>();
-  const [logs, setLogs] = useState<string[]>([]);
 
   const uploadFiles = async (files: Array<any>) => {
     if (!files.length) {
@@ -20,22 +20,37 @@ export default function Command() {
       return;
     }
 
-    const toast = await showToast(Toast.Style.Animated, "Uploading files...");
+    const toast = await showToast(Toast.Style.Animated, "Getting token...");
+
+    await Promise.all(
+      validFiles.map(async (file) => {
+        const token = await GetToken(file);
+        if (!token) return;
+        toast.title = "Uploading";
+        toast.message = `${file.split("/").pop()}`;
+        await createMediaItem(token);
+      })
+    );
+
+    toast.style = Toast.Style.Success;
+    toast.message = "Upload complete";
+    toast.title = "Success";
   };
 
   return (
     <Form
       actions={
         <ActionPanel>
-          <Action.SubmitForm title="Submit" onSubmit={({ files }) => uploadFiles(files)} />
+          <Action.SubmitForm title="Submit" onSubmit={({ files }) => uploadFiles(files)} icon={Icon.Upload} />
         </ActionPanel>
       }
     >
       <Form.FilePicker id="files" value={files} onChange={setFiles} error={error} />
       <Form.Separator />
-      {logs.map((log) => (
-        <Form.Description text={log} />
-      ))}
     </Form>
   );
+};
+
+export default function Command() {
+  return withGoogleAuth(<GoogleUpload />);
 }
