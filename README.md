@@ -15,6 +15,8 @@
 - [Raycast](https://raycast.com/download)
 
 ```bash
+git clone https://github.com/BalliAsghar/google-photos
+cd google-photos
 npm install
 ```
 
